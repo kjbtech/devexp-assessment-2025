@@ -42,7 +42,7 @@ When sending a message to the API, all requests must contain the following heade
 
 ### Implement an SDK for this API
 
-With the developer experience in mind, create a library that can be used to interact with the API. With this library:
+With a strong focus on Developer Experience (DX), your goal is to create a library that not only makes development smooth and efficient, but also ensures that end users have an outstanding onboarding experience when they start using your SDK. This means:
  - a user should not care about specifying the authentication header for every request
  - a user should be able to “auto-discover” the API parameters thanks to the auto-completion in the IDE
  - a user should be able to use all the API methods without having to know their path or their HTTP method
