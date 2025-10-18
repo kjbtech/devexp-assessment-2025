@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace KjbTech.Messaging.Sdk.IntegrationTests.Contacts;
+namespace KjbTech.Messaging.Sdk.Tests.Contacts;
 
 /// <summary>
 /// We want to check that deserialization is ok.

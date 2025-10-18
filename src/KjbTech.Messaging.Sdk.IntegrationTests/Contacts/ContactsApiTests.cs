@@ -8,6 +8,7 @@ namespace KjbTech.Messaging.Sdk.IntegrationTests.Contacts;
 /// We want to check that deserialization is ok.
 /// </summary>
 [Trait("Category", "Contacts")]
+[Trait("Category", "Integration")]
 public class ContactsApiTests
 {
     private readonly ContactsApi _contactsApi;
