@@ -5,10 +5,8 @@ namespace KjbTech.Messaging.Sdk.Contacts;
 
 public sealed class ContactsApi : MessagingApiBase
 {
-    public ContactsApi(
-        HttpClient httpClient,
-        ILogger logger)
-        : base(logger, httpClient)
+    public ContactsApi(HttpClient httpClient)
+        : base(httpClient)
     { }
 
     public async Task<ContactDetails?> GetAsync(ContactId contactId)

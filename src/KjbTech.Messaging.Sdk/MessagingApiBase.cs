@@ -1,17 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace KjbTech.Messaging.Sdk;
+﻿namespace KjbTech.Messaging.Sdk;
 
 public abstract class MessagingApiBase
 {
     protected readonly HttpClient _httpClient;
-    protected readonly ILogger _logger;
 
-    protected MessagingApiBase(
-        ILogger logger,
-        HttpClient httpClient)
+    protected MessagingApiBase(HttpClient httpClient)
     {
-        _logger = logger;
         _httpClient = httpClient;
     }
 
