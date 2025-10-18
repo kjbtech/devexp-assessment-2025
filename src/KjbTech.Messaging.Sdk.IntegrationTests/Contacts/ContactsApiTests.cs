@@ -96,6 +96,27 @@ public class ContactsApiTests
         await CleanDataWithAssertAsync(new ContactId(contactCreated.Value!.Id));
     }
 
+    [Fact]
+    public async Task List_MustBeAValidObject()
+    {
+        var contactCreated = await _contactsApi.CreateAsync(
+            new ContactToCreate()
+            {
+                Name = "Harry Potter",
+                Phone = "+33601010101"
+            }
+        );
+
+        var listContactResult = await _contactsApi.ListAsync(new PaginationParameter());
+
+        Assert.True(listContactResult.IsSuccess);
+        Assert.NotEmpty(listContactResult.Value.Items);
+        Assert.Equal(1, listContactResult.Value.PageNumber);
+        Assert.Equal(10, listContactResult.Value.PageSize);
+
+        await CleanDataWithAssertAsync(new ContactId(contactCreated.Value!.Id));
+    }
+
     private async Task CleanDataWithAssertAsync(ContactId contactId)
     {
         var contactDeletion = await _contactsApi.DeleteAsync(contactId);

@@ -23,6 +23,35 @@ public sealed class ContactsApi : MessagingApiBase
         return detailedContact;
     }
 
+    public async Task<Result<ContactList>> ListAsync(PaginationParameter paginationParameter)
+    {
+        var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"contacts?pageIndex={paginationParameter.PageNumber}&max={paginationParameter.PageSize}");
+
+        var response = await ProcessRequestAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var contactList = await response.Content.ReadFromJsonAsync<ContactList>();
+            if (contactList is null)
+            {
+                throw new MessagingException("It seems that the error format got from the API has changed.");
+            }
+            return contactList;
+        }
+        else
+        {
+            var errorWhen500Or401 = await response.Content.ReadFromJsonAsync<DefaultError>();
+            if (errorWhen500Or401 is null)
+            {
+                throw new MessagingException("It seems that the error format got from the API has changed.");
+            }
+
+            return new Error(errorWhen500Or401.Message);
+        }
+    }
+
     public async Task<Result<ContactDetails?>> CreateAsync(ContactToCreate contactToCreate)
     {
         var request = new HttpRequestMessage(
