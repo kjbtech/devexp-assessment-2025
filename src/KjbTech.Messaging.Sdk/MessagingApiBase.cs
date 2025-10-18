@@ -13,15 +13,6 @@ public abstract class MessagingApiBase
     {
         var response = await _httpClient.SendAsync(request);
 
-        if (response.IsSuccessStatusCode)
-        {
-            return response;
-        }
-
-        throw new MessagingException(
-            $"Messaging API was not successful for reasons : " +
-            $"Code: {response.StatusCode} " +
-            $"Content: '{await response.Content.ReadAsStringAsync()}'."
-            );
+        return response;
     }
 }

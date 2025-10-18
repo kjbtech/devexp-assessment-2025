@@ -20,9 +20,7 @@ public class ContactsApiTests
                 .Respond("application/json", expectedResponse);
         var httpClient = mockHttp.ToHttpClient();
         httpClient.BaseAddress = new Uri("http://localhost/");
-        var api = new ContactsApi(
-            new NullLogger<ContactsApi>(),
-            httpClient);
+        var api = new ContactsApi(httpClient);
 
         var contact = await api.GetAsync(new ContactId("fefe"));
 
