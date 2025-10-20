@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
+using System.Reflection;
 
 namespace KjbTech.Messaging.Sdk;
 
@@ -34,7 +35,8 @@ public static class ServiceCollectionExtensions
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", messagingEndpoint.ApiKey);
             client.BaseAddress = new Uri(messagingEndpoint.ApiBaseUrl);
-        });
+        })
+            .AddHttpMessageHandler(() => new UpdateUserAgent());
 
         services.AddHttpClient<MessagesApi>((serviceProvider, client) =>
         {
@@ -43,7 +45,8 @@ public static class ServiceCollectionExtensions
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", messagingEndpoint.ApiKey);
             client.BaseAddress = new Uri(messagingEndpoint.ApiBaseUrl);
-        });
+        })
+            .AddHttpMessageHandler(() => new UpdateUserAgent());
 
         return services;
     }
