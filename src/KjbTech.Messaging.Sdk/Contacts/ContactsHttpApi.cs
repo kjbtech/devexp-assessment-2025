@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using KjbTech.Messaging.Sdk.Errors;
+using KjbTech.Messaging.Sdk.Exceptions;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -13,26 +15,26 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
         : base(httpClient)
     { }
 
-    public async Task<ExistingContact?> GetAsync(ContactId contactId)
+    public async Task<ExistingContact?> GetAsync(ContactId contactId, CancellationToken cancellationToken = default)
     {
-        var request = new HttpRequestMessage(
+        using var request = new HttpRequestMessage(
             HttpMethod.Get,
             $"contacts/{contactId.Value}");
 
-        var response = await ProcessRequestAsync(request);
+        var response = await ProcessRequestAsync(request, cancellationToken);
 
         var detailedContact = await response.Content.ReadFromJsonAsync<ExistingContact>();
 
         return detailedContact;
     }
 
-    public async Task<Result<ContactList>> ListAsync(PaginationParameter paginationParameter)
+    public async Task<Result<ContactList>> ListAsync(PaginationParameter paginationParameter, CancellationToken cancellationToken = default)
     {
-        var request = new HttpRequestMessage(
+        using var request = new HttpRequestMessage(
             HttpMethod.Get,
             $"contacts?pageIndex={paginationParameter.PageNumber}&max={paginationParameter.PageSize}");
 
-        var response = await ProcessRequestAsync(request);
+        var response = await ProcessRequestAsync(request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -55,16 +57,16 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
         }
     }
 
-    public async Task<Result<ExistingContact?>> CreateAsync(ContactToCreate contactToCreate)
+    public async Task<Result<ExistingContact?>> CreateAsync(ContactToCreate contactToCreate, CancellationToken cancellationToken = default)
     {
-        var request = new HttpRequestMessage(
+        using var request = new HttpRequestMessage(
                     HttpMethod.Post,
                     $"contacts")
         {
             Content = JsonContent.Create(contactToCreate, MediaTypeHeaderValue.Parse("application/json"))
         };
 
-        var response = await ProcessRequestAsync(request);
+        var response = await ProcessRequestAsync(request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -95,13 +97,13 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
         }
     }
 
-    public async Task<Result<bool>> DeleteAsync(ContactId contactId)
+    public async Task<Result<bool>> DeleteAsync(ContactId contactId, CancellationToken cancellationToken = default)
     {
-        var request = new HttpRequestMessage(
+        using var request = new HttpRequestMessage(
                     HttpMethod.Delete,
                     $"contacts/{contactId.Value}");
 
-        var response = await ProcessRequestAsync(request);
+        var response = await ProcessRequestAsync(request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {

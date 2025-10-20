@@ -1,11 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace KjbTech.Messaging.Sdk.Contacts;
+namespace KjbTech.Messaging.Sdk.Errors;
 
 /// <summary>
 /// When 401, 404, 500...
 /// </summary>
-internal sealed class DefaultError
+public sealed class DefaultError
 {
     /// <summary>
     /// The descirption of the error.

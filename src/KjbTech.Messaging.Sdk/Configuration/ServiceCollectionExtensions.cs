@@ -1,4 +1,5 @@
 ﻿using KjbTech.Messaging.Sdk.Contacts;
+using KjbTech.Messaging.Sdk.Exceptions;
 using KjbTech.Messaging.Sdk.Messages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
