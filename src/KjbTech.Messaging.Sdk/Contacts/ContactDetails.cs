@@ -2,6 +2,9 @@
 
 namespace KjbTech.Messaging.Sdk.Contacts;
 
+/// <summary>
+/// Existing contact.
+/// </summary>
 public sealed class ContactDetails
 {
     /// <summary>

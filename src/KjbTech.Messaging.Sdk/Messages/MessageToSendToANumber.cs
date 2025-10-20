@@ -12,10 +12,16 @@ public sealed class MessageToSendToANumber : MessageToSend
         To = new ContactForAMessageToSend() { Name = name, Phone = phone };
     }
 
+    /// <summary>
+    /// <see cref="ContactForAMessageToSend"/>
+    /// </summary>
     [JsonPropertyName("to")]
     public ContactForAMessageToSend To { get; set; } = null!;
 }
 
+/// <summary>
+/// When seding a message to a unregistered contact.
+/// </summary>
 public sealed class ContactForAMessageToSend
 {
     /// <summary>

@@ -8,7 +8,7 @@ namespace KjbTech.Messaging.Sdk.Tests.Contacts;
 /// We want to check that deserialization is ok.
 /// </summary>
 [Trait("Category", "Contacts")]
-public class ContactsApiTests
+public class ContactsHttpApiTests
 {
     [Fact]
     public async Task Get_ExistingContact_MustBeAValidObject()
@@ -20,7 +20,7 @@ public class ContactsApiTests
                 .Respond("application/json", expectedResponse);
         var httpClient = mockHttp.ToHttpClient();
         httpClient.BaseAddress = new Uri("http://localhost/");
-        var api = new ContactsApi(httpClient);
+        var api = new ContactsHttpApi(httpClient);
 
         var contact = await api.GetAsync(new ContactId("fefe"));
 

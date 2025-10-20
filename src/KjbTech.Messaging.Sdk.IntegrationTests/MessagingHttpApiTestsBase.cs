@@ -4,12 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace KjbTech.Messaging.Sdk.IntegrationTests;
 
-public abstract class MessagingApiTestsBase
+public abstract class MessagingHttpApiTestsBase
 {
     protected readonly ServiceProvider _serviceProvider;
-    protected readonly ContactsApi _contactsApi;
+    protected readonly ContactsHttpApi _contactsApi;
 
-    protected MessagingApiTestsBase()
+    protected MessagingHttpApiTestsBase()
     {
         var config = new ConfigurationBuilder()
         .AddInMemoryCollection(new Dictionary<string, string?>
@@ -27,7 +27,7 @@ public abstract class MessagingApiTestsBase
         _serviceProvider = services.BuildServiceProvider();
 
         // And check that HttpClient is properly configured
-        _contactsApi = _serviceProvider.GetRequiredService<ContactsApi>();
+        _contactsApi = _serviceProvider.GetRequiredService<ContactsHttpApi>();
     }
 
     protected async Task CleanContactWithAssertAsync(ContactId contactId)

@@ -5,9 +5,12 @@ using System.Net.Http.Json;
 
 namespace KjbTech.Messaging.Sdk.Messages;
 
-public sealed class MessagesApi : MessagingApiBase
+/// <summary>
+/// Messages HTTP Api implementation.
+/// </summary>
+public sealed class MessagesHttpApi : MessagingHttpApiBase
 {
-    public MessagesApi(HttpClient httpClient)
+    public MessagesHttpApi(HttpClient httpClient)
         : base(httpClient)
     { }
 

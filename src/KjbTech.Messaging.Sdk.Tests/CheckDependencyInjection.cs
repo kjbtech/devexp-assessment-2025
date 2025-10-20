@@ -34,7 +34,7 @@ public class CheckDependencyInjection
         Assert.Equal("test-api-key", options.ApiKey);
 
         // And check that HttpClient is properly configured
-        var contactsApi = provider.GetRequiredService<ContactsApi>();
+        var contactsApi = provider.GetRequiredService<ContactsHttpApi>();
         Assert.NotNull(contactsApi);
     }
 }

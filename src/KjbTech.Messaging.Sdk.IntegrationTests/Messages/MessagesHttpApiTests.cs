@@ -6,13 +6,13 @@ namespace KjbTech.Messaging.Sdk.IntegrationTests.Messages;
 
 [Trait("Category", "Messages")]
 [Trait("Category", "Integration")]
-public class MessagesApiTests : MessagingApiTestsBase
+public class MessagesHttpApiTests : MessagingHttpApiTestsBase
 {
-    private readonly MessagesApi _messagesApi;
+    private readonly MessagesHttpApi _messagesApi;
 
-    public MessagesApiTests() : base()
+    public MessagesHttpApiTests() : base()
     {
-        _messagesApi = _serviceProvider.GetRequiredService<MessagesApi>();
+        _messagesApi = _serviceProvider.GetRequiredService<MessagesHttpApi>();
     }
 
     [Fact]

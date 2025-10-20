@@ -4,9 +4,12 @@ using System.Net.Http.Json;
 
 namespace KjbTech.Messaging.Sdk.Contacts;
 
-public sealed class ContactsApi : MessagingApiBase
+/// <summary>
+/// Contacts HTTP Api implementation.
+/// </summary>
+public sealed class ContactsHttpApi : MessagingHttpApiBase
 {
-    public ContactsApi(HttpClient httpClient)
+    public ContactsHttpApi(HttpClient httpClient)
         : base(httpClient)
     { }
 

@@ -1,10 +1,10 @@
 ﻿namespace KjbTech.Messaging.Sdk;
 
-public abstract class MessagingApiBase
+public abstract class MessagingHttpApiBase
 {
     protected readonly HttpClient _httpClient;
 
-    protected MessagingApiBase(HttpClient httpClient)
+    protected MessagingHttpApiBase(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }

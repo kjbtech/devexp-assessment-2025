@@ -8,7 +8,7 @@ namespace KjbTech.Messaging.Sdk.Webhook;
 
 public static class WebhookHelper
 {
-    public const string Scheme = "Signature";
+    private const string Scheme = "Signature";
 
     private static readonly JsonSerializerOptions _defaultJsonSerializerOptions = new()
     {
@@ -18,7 +18,7 @@ public static class WebhookHelper
 
     /// <summary>
     /// Verifies the Authorization signature and deserializes the JSON body
-    /// into a <see cref="TEvent"/> instance.
+    /// into the typed instance.
     /// </summary>
     /// <param name="body">The body of the incoming request.</param>
     /// <param name="signature">The signature sent.</param>
@@ -43,7 +43,7 @@ public static class WebhookHelper
         }
     }
 
-    public static bool Verify(string rawBody, string secret, string authorizationHeader)
+    private static bool Verify(string rawBody, string secret, string authorizationHeader)
     {
         var parts = authorizationHeader.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length != 2 || !parts[0].Equals(Scheme, StringComparison.OrdinalIgnoreCase))
@@ -56,7 +56,7 @@ public static class WebhookHelper
         return FixedTimeEqualsHex(provided, computed);
     }
 
-    public static string ComputeHex(string rawBody, string secret)
+    private static string ComputeHex(string rawBody, string secret)
     {
         var key = Encoding.UTF8.GetBytes(secret);
         var data = Encoding.UTF8.GetBytes(rawBody);

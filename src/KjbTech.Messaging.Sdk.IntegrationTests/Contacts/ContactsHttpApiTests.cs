@@ -4,9 +4,9 @@ namespace KjbTech.Messaging.Sdk.IntegrationTests.Contacts;
 
 [Trait("Category", "Contacts")]
 [Trait("Category", "Integration")]
-public class ContactsApiTests : MessagingApiTestsBase
+public class ContactsHttpApiTests : MessagingHttpApiTestsBase
 {
-    public ContactsApiTests() : base()
+    public ContactsHttpApiTests() : base()
     {
     }
 

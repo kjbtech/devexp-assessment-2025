@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
             }
         });
 
-        services.AddHttpClient<ContactsApi>((serviceProvider, client) =>
+        services.AddHttpClient<ContactsHttpApi>((serviceProvider, client) =>
         {
             var messagingEndpoint = serviceProvider
                 .GetRequiredService<IOptions<MessagingEndpoint>>().Value;
@@ -37,7 +37,7 @@ public static class ServiceCollectionExtensions
         })
             .AddHttpMessageHandler(() => new UpdateUserAgent());
 
-        services.AddHttpClient<MessagesApi>((serviceProvider, client) =>
+        services.AddHttpClient<MessagesHttpApi>((serviceProvider, client) =>
         {
             var messagingEndpoint = serviceProvider
                 .GetRequiredService<IOptions<MessagingEndpoint>>().Value;
