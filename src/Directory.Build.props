@@ -1,0 +1,19 @@
+<Project>
+	<PropertyGroup>
+		<Version>0.1.0</Version>
+		<PackageId>KjbTech.Messaging.Sdk</PackageId>
+		<Authors>Kevin Blenner</Authors>
+		<Description>Messaging SDK for the Messaging API.</Description>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<RepositoryUrl>https://github.com/kjbtech/devexp-assessment-2025</RepositoryUrl>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<AssemblyCompany>$(Authors)</AssemblyCompany>
+		<AssemblyInformationalVersionAttribute>$(Version)</AssemblyInformationalVersionAttribute>
+		<AssemblyVersionAttribute>$(Version)</AssemblyVersionAttribute>
+		<AssemblyFileVersionAttribute >$(Version)</AssemblyFileVersionAttribute>
+	</PropertyGroup>
+</Project>
