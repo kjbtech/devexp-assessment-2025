@@ -10,6 +10,11 @@ namespace KjbTech.Messaging.Sdk;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Build all usable helper to interact with APIs.
+    /// Ensure to configure in you settings/env, a section called 'Messaging'.
+    /// </summary>
+    /// <exception cref="MessagingException"></exception>
     public static IServiceCollection AddMessaging(
         this IServiceCollection services,
         IConfiguration configuration,
