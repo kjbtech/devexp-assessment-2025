@@ -5,8 +5,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      WEBHOOK_URL: ${WEBHOOK_URL}
-      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+      WEBHOOK_URL: 'http://host.docker.internal:5038'
+      WEBHOOK_SECRET: 'alohomora'
 
   swagger-ui:
     image: swaggerapi/swagger-ui

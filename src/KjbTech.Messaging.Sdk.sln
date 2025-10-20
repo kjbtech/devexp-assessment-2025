@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KjbTech.Messaging.Sdk.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KjbTech.Messaging.Sdk.IntegrationTests", "KjbTech.Messaging.Sdk.IntegrationTests\KjbTech.Messaging.Sdk.IntegrationTests.csproj", "{CE6BFB1A-9CBC-475D-AA24-130267CFF9C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KjbTech.Messaging.ClientWebApp", "KjbTech.Messaging.ClientWebApp\KjbTech.Messaging.ClientWebApp.csproj", "{59079265-33CA-4E89-8713-E8165BAC06AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{CE6BFB1A-9CBC-475D-AA24-130267CFF9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE6BFB1A-9CBC-475D-AA24-130267CFF9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE6BFB1A-9CBC-475D-AA24-130267CFF9C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59079265-33CA-4E89-8713-E8165BAC06AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59079265-33CA-4E89-8713-E8165BAC06AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59079265-33CA-4E89-8713-E8165BAC06AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59079265-33CA-4E89-8713-E8165BAC06AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

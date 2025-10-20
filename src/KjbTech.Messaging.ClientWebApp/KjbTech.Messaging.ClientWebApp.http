@@ -1,0 +1,6 @@
+@KjbTech.Messaging.ClientWebApp_HostAddress = http://localhost:5038
+
+GET {{KjbTech.Messaging.ClientWebApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
