@@ -1,0 +1,67 @@
+﻿using KjbTech.Messaging.Sdk.Contacts;
+using KjbTech.Messaging.Sdk.Messages;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace KjbTech.Messaging.Sdk.IntegrationTests.Messages;
+
+[Trait("Category", "Messages")]
+[Trait("Category", "Integration")]
+public class MessagesApiTests : MessagingApiTestsBase
+{
+    private readonly MessagesApi _messagesApi;
+
+    public MessagesApiTests() : base()
+    {
+        _messagesApi = _serviceProvider.GetRequiredService<MessagesApi>();
+    }
+
+    [Fact]
+    public async Task EnqueueToSendAsync_ToAPhone_MustSuccess()
+    {
+        var messageSentResult = await _messagesApi.EnqueueToSendAsync(
+            new MessageToSendToANumber("Voldemort", "+33601010102")
+            {
+                Content = "Experliarmus!",
+                From = "+33601010101"
+            }
+        );
+
+        await CleanContactsWithAssertAsync();
+
+        Assert.True(messageSentResult.IsSuccess);
+        Assert.Equal("Experliarmus!", messageSentResult.Value.Content);
+        Assert.Equal("+33601010101", messageSentResult.Value.From);
+        Assert.NotNull(messageSentResult.Value.To);
+        Assert.True(messageSentResult.Value.CreatedAt >= DateTime.MinValue);
+    }
+
+    [Fact]
+    public async Task EnqueueToSendAsync_ToARegisteredContact_MustSuccess()
+    {
+        var contactCreated = await _contactsApi.CreateAsync(
+            new ContactToCreate()
+            {
+                Name = "Voldemort",
+                Phone = "+33601010102"
+            }
+        );
+        Assert.True(contactCreated.IsSuccess);
+
+        var messageSentResult = await _messagesApi.EnqueueToSendAsync(
+            new MessageToSendToARegisteredContact()
+            {
+                To = new ExistingContactForAMessageToSend { ContactId = contactCreated.Value!.Id },
+                Content = "Experliarmus!",
+                From = "+33601010101"
+            }
+        );
+
+        await CleanContactWithAssertAsync(new ContactId(contactCreated.Value.Id));
+
+        Assert.True(messageSentResult.IsSuccess);
+        Assert.Equal("Experliarmus!", messageSentResult.Value.Content);
+        Assert.Equal("+33601010101", messageSentResult.Value.From);
+        Assert.NotNull(messageSentResult.Value.To);
+        Assert.True(messageSentResult.Value.CreatedAt >= DateTime.MinValue);
+    }
+}

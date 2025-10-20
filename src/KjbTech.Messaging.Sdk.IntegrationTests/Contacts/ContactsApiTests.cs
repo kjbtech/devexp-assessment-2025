@@ -1,37 +1,13 @@
 ﻿using KjbTech.Messaging.Sdk.Contacts;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace KjbTech.Messaging.Sdk.IntegrationTests.Contacts;
 
-/// <summary>
-/// We want to check that deserialization is ok.
-/// </summary>
 [Trait("Category", "Contacts")]
 [Trait("Category", "Integration")]
-public class ContactsApiTests
+public class ContactsApiTests : MessagingApiTestsBase
 {
-    private readonly ContactsApi _contactsApi;
-
-    public ContactsApiTests()
+    public ContactsApiTests() : base()
     {
-        var config = new ConfigurationBuilder()
-        .AddInMemoryCollection(new Dictionary<string, string?>
-        {
-            ["Messaging:ApiBaseUrl"] = "http://localhost:3000",
-            ["Messaging:ApiKey"] = "there-is-no-key"
-        })
-        .Build();
-
-        var services = new ServiceCollection();
-
-        services.AddMessaging(config);
-
-        // Build provider
-        var provider = services.BuildServiceProvider();
-
-        // And check that HttpClient is properly configured
-        _contactsApi = provider.GetRequiredService<ContactsApi>();
     }
 
     [Fact]
@@ -49,7 +25,7 @@ public class ContactsApiTests
         Assert.Equal("Harry Potter", contactCreated.Value.Name);
         Assert.Equal("+33601010101", contactCreated.Value.Phone);
 
-        await CleanDataWithAssertAsync(new ContactId(contactCreated.Value.Id));
+        await CleanContactWithAssertAsync(new ContactId(contactCreated.Value.Id));
     }
 
     [Fact]
@@ -74,7 +50,7 @@ public class ContactsApiTests
         Assert.True(secondContactCreated.HasFailed);
         Assert.NotNull(secondContactCreated.Error);
 
-        await CleanDataWithAssertAsync(new ContactId(firstContactCreated.Value!.Id));
+        await CleanContactWithAssertAsync(new ContactId(firstContactCreated.Value!.Id));
     }
 
     [Fact]
@@ -94,7 +70,7 @@ public class ContactsApiTests
         Assert.Equal("Harry Potter", contact.Name);
         Assert.Equal("+33601010101", contact.Phone);
 
-        await CleanDataWithAssertAsync(new ContactId(contactCreated.Value!.Id));
+        await CleanContactWithAssertAsync(new ContactId(contactCreated.Value!.Id));
     }
 
     [Fact]
@@ -115,13 +91,6 @@ public class ContactsApiTests
         Assert.Equal(1, listContactResult.Value.PageNumber);
         Assert.Equal(10, listContactResult.Value.PageSize);
 
-        await CleanDataWithAssertAsync(new ContactId(contactCreated.Value!.Id));
-    }
-
-    private async Task CleanDataWithAssertAsync(ContactId contactId)
-    {
-        var contactDeletion = await _contactsApi.DeleteAsync(contactId);
-
-        Assert.True(contactDeletion.IsSuccess);
+        await CleanContactWithAssertAsync(new ContactId(contactCreated.Value!.Id));
     }
 }

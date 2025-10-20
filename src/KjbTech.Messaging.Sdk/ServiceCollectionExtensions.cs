@@ -1,4 +1,5 @@
 ﻿using KjbTech.Messaging.Sdk.Contacts;
+using KjbTech.Messaging.Sdk.Messages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -27,6 +28,15 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddHttpClient<ContactsApi>((serviceProvider, client) =>
+        {
+            var messagingEndpoint = serviceProvider
+                .GetRequiredService<IOptions<MessagingEndpoint>>().Value;
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", messagingEndpoint.ApiKey);
+            client.BaseAddress = new Uri(messagingEndpoint.ApiBaseUrl);
+        });
+
+        services.AddHttpClient<MessagesApi>((serviceProvider, client) =>
         {
             var messagingEndpoint = serviceProvider
                 .GetRequiredService<IOptions<MessagingEndpoint>>().Value;
