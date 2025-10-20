@@ -66,9 +66,9 @@ public class ContactsHttpApiTests : MessagingHttpApiTestsBase
 
         var contact = await _contactsApi.GetAsync(new ContactId(contactCreated.Value!.Id));
 
-        Assert.NotNull(contact);
-        Assert.Equal("Harry Potter", contact.Name);
-        Assert.Equal("+33601010101", contact.Phone);
+        Assert.True(contact.IsSuccess);
+        Assert.Equal("Harry Potter", contact.Value.Name);
+        Assert.Equal("+33601010101", contact.Value.Phone);
 
         await CleanContactWithAssertAsync(new ContactId(contactCreated.Value!.Id));
     }

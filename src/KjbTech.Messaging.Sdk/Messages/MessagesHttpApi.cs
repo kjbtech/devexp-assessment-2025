@@ -18,17 +18,25 @@ public sealed class MessagesHttpApi : MessagingHttpApiBase
         : base(httpClient)
     { }
 
-    public async Task<EnqueuedMessageToSend?> GetAsync(MessageId messageId, CancellationToken cancellationToken = default)
+    public async Task<Result<EnqueuedMessageToSend?>> GetAsync(MessageId messageId, CancellationToken cancellationToken = default)
     {
         using var request = new HttpRequestMessage(
             HttpMethod.Get,
             $"{ApiRoute}/{messageId.Value}");
 
-        var response = await ProcessRequestAsync(request, cancellationToken);
+        var response = await ProcessRequestAsync<EnqueuedMessageToSend>(request, cancellationToken);
+        if (response.IsSuccess)
+        {
+            return response.WhenSuccess;
+        }
 
-        var detailedContact = await response.Content.ReadFromJsonAsync<EnqueuedMessageToSend>();
+        var errorWhen500Or401 = await response.WhenError.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
+        if (errorWhen500Or401 is null)
+        {
+            throw new MessagingException("It seems that the error format got from the API has changed.");
+        }
 
-        return detailedContact;
+        return new Error(errorWhen500Or401.Message);
     }
 
     public async Task<Result<EnqueuedMessageToSendList>> ListEnqueuedMessageToSendAsync(MessagesPaginationParameter paginationParameter, CancellationToken cancellationToken = default)
@@ -37,27 +45,19 @@ public sealed class MessagesHttpApi : MessagingHttpApiBase
             HttpMethod.Get,
             $"{ApiRoute}?page={paginationParameter.PageNumber}&limit={paginationParameter.PageSize}");
 
-        var response = await ProcessRequestAsync(request, cancellationToken);
-
-        if (response.IsSuccessStatusCode)
+        var response = await ProcessRequestAsync<EnqueuedMessageToSendList>(request, cancellationToken);
+        if (response.IsSuccess)
         {
-            var enqueuedMessageToSendList = await response.Content.ReadFromJsonAsync<EnqueuedMessageToSendList>(cancellationToken);
-            if (enqueuedMessageToSendList is null)
-            {
-                throw new MessagingException("It seems that the error format got from the API has changed.");
-            }
-            return enqueuedMessageToSendList;
+            return response.WhenSuccess;
         }
-        else
-        {
-            var errorWhen500Or401 = await response.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
-            if (errorWhen500Or401 is null)
-            {
-                throw new MessagingException("It seems that the error format got from the API has changed.");
-            }
 
-            return new Error(errorWhen500Or401.Message);
+        var errorWhen500Or401 = await response.WhenError.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
+        if (errorWhen500Or401 is null)
+        {
+            throw new MessagingException("It seems that the error format got from the API has changed.");
         }
+
+        return new Error(errorWhen500Or401.Message);
     }
 
     public async Task<Result<EnqueuedMessageToSend?>> EnqueueToSendAsync(MessageToSendToARegisteredContact messageToSendToARegisteredContact, CancellationToken cancellationToken = default)
@@ -69,34 +69,31 @@ public sealed class MessagesHttpApi : MessagingHttpApiBase
             Content = JsonContent.Create(messageToSendToARegisteredContact, MediaTypeHeaderValue.Parse("application/json"))
         };
 
-        var response = await ProcessRequestAsync(request, cancellationToken);
-
-        if (response.IsSuccessStatusCode)
+        var response = await ProcessRequestAsync<EnqueuedMessageToSend>(request, cancellationToken);
+        if (response.IsSuccess)
         {
-            return await response.Content.ReadFromJsonAsync<EnqueuedMessageToSend>();
+            return response.WhenSuccess;
+        }
+
+        if (response.WhenError.StatusCode == HttpStatusCode.BadRequest)
+        {
+            var errorWhenContactCreation = await response.WhenError.Content.ReadFromJsonAsync<ErrorWhenTryingCreation>(cancellationToken);
+            if (errorWhenContactCreation is null)
+            {
+                throw new MessagingException("It seems that the error format got from the API has changed.");
+            }
+
+            return new Error(errorWhenContactCreation.Message);
         }
         else
         {
-            if (response.StatusCode == HttpStatusCode.BadRequest)
+            var errorWhen500Or401 = await response.WhenError.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
+            if (errorWhen500Or401 is null)
             {
-                var errorWhenContactCreation = await response.Content.ReadFromJsonAsync<ErrorWhenContactCreation>(cancellationToken);
-                if (errorWhenContactCreation is null)
-                {
-                    throw new MessagingException("It seems that the error format got from the API has changed.");
-                }
-
-                return new Error(errorWhenContactCreation.Error);
+                throw new MessagingException("It seems that the error format got from the API has changed.");
             }
-            else
-            {
-                var errorWhen500Or401 = await response.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
-                if (errorWhen500Or401 is null)
-                {
-                    throw new MessagingException("It seems that the error format got from the API has changed.");
-                }
 
-                return new Error(errorWhen500Or401.Message);
-            }
+            return new Error(errorWhen500Or401.Message);
         }
     }
 
@@ -109,34 +106,31 @@ public sealed class MessagesHttpApi : MessagingHttpApiBase
             Content = JsonContent.Create(messageToSendToANumber, MediaTypeHeaderValue.Parse("application/json"))
         };
 
-        var response = await ProcessRequestAsync(request, cancellationToken);
-
-        if (response.IsSuccessStatusCode)
+        var response = await ProcessRequestAsync<EnqueuedMessageToSend>(request, cancellationToken);
+        if (response.IsSuccess)
         {
-            return await response.Content.ReadFromJsonAsync<EnqueuedMessageToSend>(cancellationToken);
+            return response.WhenSuccess;
+        }
+
+        if (response.WhenError.StatusCode == HttpStatusCode.BadRequest)
+        {
+            var errorWhenContactCreation = await response.WhenError.Content.ReadFromJsonAsync<ErrorWhenTryingCreation>(cancellationToken);
+            if (errorWhenContactCreation is null)
+            {
+                throw new MessagingException("It seems that the error format got from the API has changed.");
+            }
+
+            return new Error(errorWhenContactCreation.Message);
         }
         else
         {
-            if (response.StatusCode == HttpStatusCode.BadRequest)
+            var errorWhen500Or401 = await response.WhenError.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
+            if (errorWhen500Or401 is null)
             {
-                var errorWhenContactCreation = await response.Content.ReadFromJsonAsync<ErrorWhenContactCreation>(cancellationToken);
-                if (errorWhenContactCreation is null)
-                {
-                    throw new MessagingException("It seems that the error format got from the API has changed.");
-                }
-
-                return new Error(errorWhenContactCreation.Error);
+                throw new MessagingException("It seems that the error format got from the API has changed.");
             }
-            else
-            {
-                var errorWhen500Or401 = await response.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
-                if (errorWhen500Or401 is null)
-                {
-                    throw new MessagingException("It seems that the error format got from the API has changed.");
-                }
 
-                return new Error(errorWhen500Or401.Message);
-            }
+            return new Error(errorWhen500Or401.Message);
         }
     }
 }

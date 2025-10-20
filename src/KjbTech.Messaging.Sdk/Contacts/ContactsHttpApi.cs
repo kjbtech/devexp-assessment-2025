@@ -15,17 +15,25 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
         : base(httpClient)
     { }
 
-    public async Task<ExistingContact?> GetAsync(ContactId contactId, CancellationToken cancellationToken = default)
+    public async Task<Result<ExistingContact>> GetAsync(ContactId contactId, CancellationToken cancellationToken = default)
     {
         using var request = new HttpRequestMessage(
             HttpMethod.Get,
             $"contacts/{contactId.Value}");
 
-        var response = await ProcessRequestAsync(request, cancellationToken);
+        var response = await ProcessRequestAsync<ExistingContact>(request, cancellationToken);
+        if (response.IsSuccess)
+        {
+            return response.WhenSuccess;
+        }
 
-        var detailedContact = await response.Content.ReadFromJsonAsync<ExistingContact>();
+        var errorWhen500Or401 = await response.WhenError.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
+        if (errorWhen500Or401 is null)
+        {
+            throw new MessagingException("It seems that the error format got from the API has changed.");
+        }
 
-        return detailedContact;
+        return new Error(errorWhen500Or401.Message);
     }
 
     public async Task<Result<ContactList>> ListAsync(PaginationParameter paginationParameter, CancellationToken cancellationToken = default)
@@ -34,30 +42,22 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
             HttpMethod.Get,
             $"contacts?pageIndex={paginationParameter.PageNumber}&max={paginationParameter.PageSize}");
 
-        var response = await ProcessRequestAsync(request, cancellationToken);
-
-        if (response.IsSuccessStatusCode)
+        var response = await ProcessRequestAsync<ContactList>(request, cancellationToken);
+        if (response.IsSuccess)
         {
-            var contactList = await response.Content.ReadFromJsonAsync<ContactList>();
-            if (contactList is null)
-            {
-                throw new MessagingException("It seems that the error format got from the API has changed.");
-            }
-            return contactList;
+            return response.WhenSuccess;
         }
-        else
-        {
-            var errorWhen500Or401 = await response.Content.ReadFromJsonAsync<DefaultError>();
-            if (errorWhen500Or401 is null)
-            {
-                throw new MessagingException("It seems that the error format got from the API has changed.");
-            }
 
-            return new Error(errorWhen500Or401.Message);
+        var errorWhen500Or401 = await response.WhenError.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
+        if (errorWhen500Or401 is null)
+        {
+            throw new MessagingException("It seems that the error format got from the API has changed.");
         }
+
+        return new Error(errorWhen500Or401.Message);
     }
 
-    public async Task<Result<ExistingContact?>> CreateAsync(ContactToCreate contactToCreate, CancellationToken cancellationToken = default)
+    public async Task<Result<ExistingContact>> CreateAsync(ContactToCreate contactToCreate, CancellationToken cancellationToken = default)
     {
         using var request = new HttpRequestMessage(
                     HttpMethod.Post,
@@ -66,34 +66,31 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
             Content = JsonContent.Create(contactToCreate, MediaTypeHeaderValue.Parse("application/json"))
         };
 
-        var response = await ProcessRequestAsync(request, cancellationToken);
-
-        if (response.IsSuccessStatusCode)
+        var response = await ProcessRequestAsync<ExistingContact>(request, cancellationToken);
+        if (response.IsSuccess)
         {
-            return await response.Content.ReadFromJsonAsync<ExistingContact>();
+            return response.WhenSuccess;
+        }
+
+        if (response.WhenError.StatusCode == HttpStatusCode.BadRequest)
+        {
+            var errorWhenContactCreation = await response.WhenError.Content.ReadFromJsonAsync<ErrorWhenTryingCreation>(cancellationToken);
+            if (errorWhenContactCreation is null)
+            {
+                throw new MessagingException("It seems that the error format got from the API has changed.");
+            }
+
+            return new Error(errorWhenContactCreation.Message);
         }
         else
         {
-            if (response.StatusCode == HttpStatusCode.BadRequest)
+            var errorWhen500Or401 = await response.WhenError.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
+            if (errorWhen500Or401 is null)
             {
-                var errorWhenContactCreation = await response.Content.ReadFromJsonAsync<ErrorWhenContactCreation>();
-                if (errorWhenContactCreation is null)
-                {
-                    throw new MessagingException("It seems that the error format got from the API has changed.");
-                }
-
-                return new Error(errorWhenContactCreation.Error);
+                throw new MessagingException("It seems that the error format got from the API has changed.");
             }
-            else
-            {
-                var errorWhen500Or401 = await response.Content.ReadFromJsonAsync<DefaultError>();
-                if (errorWhen500Or401 is null)
-                {
-                    throw new MessagingException("It seems that the error format got from the API has changed.");
-                }
 
-                return new Error(errorWhen500Or401.Message);
-            }
+            return new Error(errorWhen500Or401.Message);
         }
     }
 
@@ -109,15 +106,13 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
         {
             return true;
         }
-        else
-        {
-            var defaultError = await response.Content.ReadFromJsonAsync<DefaultError>();
-            if (defaultError is null)
-            {
-                throw new MessagingException("It seems that the error format got from the API has changed.");
-            }
 
-            return new Error(defaultError.Message);
+        var defaultError = await response.Content.ReadFromJsonAsync<DefaultError>(cancellationToken);
+        if (defaultError is null)
+        {
+            throw new MessagingException("It seems that the error format got from the API has changed.");
         }
+
+        return new Error(defaultError.Message);
     }
 }

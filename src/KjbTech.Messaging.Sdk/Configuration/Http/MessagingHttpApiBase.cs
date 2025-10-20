@@ -1,5 +1,6 @@
 ﻿using KjbTech.Messaging.Sdk.Exceptions;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace KjbTech.Messaging.Sdk;
 
@@ -12,7 +13,28 @@ public abstract class MessagingHttpApiBase
         _httpClient = httpClient;
     }
 
-    protected async Task<HttpResponseMessage> ProcessRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected async Task<Result<TWhenSuccess?, HttpResponseMessage>> ProcessRequestAsync<TWhenSuccess>(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken)
+    {
+        var response = await ProcessRequestAsync(request, cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<TWhenSuccess>(cancellationToken);
+            if (result is null)
+            {
+                throw new MessagingException("It seems that the error format got from the API has changed.");
+            }
+            return result;
+        }
+
+        return response;
+    }
+
+    protected async Task<HttpResponseMessage> ProcessRequestAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken)
     {
         if (!request.Headers.Accept.Any())
         {

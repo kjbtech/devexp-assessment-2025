@@ -1,5 +1,4 @@
 ﻿using KjbTech.Messaging.Sdk.Contacts;
-using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
 
 namespace KjbTech.Messaging.Sdk.Tests.Contacts;
@@ -22,10 +21,10 @@ public class ContactsHttpApiTests
         httpClient.BaseAddress = new Uri("http://localhost/");
         var api = new ContactsHttpApi(httpClient);
 
-        var contact = await api.GetAsync(new ContactId("fefe"));
+        var getContact = await api.GetAsync(new ContactId("fefe"));
 
-        Assert.NotNull(contact);
-        Assert.Equal("string", contact.Name);
-        Assert.Equal("+33601010101", contact.Phone);
+        Assert.True(getContact.IsSuccess);
+        Assert.Equal("string", getContact.Value.Name);
+        Assert.Equal("+33601010101", getContact.Value.Phone);
     }
 }
