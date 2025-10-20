@@ -14,7 +14,7 @@ public class EnqueuedMessageToSend
     /// The unique ID of the contact.
     /// </summary>
     [JsonPropertyName("to")]
-    public required string To { get; set; } = null!;
+    public required string RecipientContactId { get; set; } = null!;
 
     /// <summary>
     /// The sender's phone number.

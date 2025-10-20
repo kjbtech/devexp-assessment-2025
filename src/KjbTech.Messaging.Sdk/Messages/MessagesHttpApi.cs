@@ -27,6 +27,35 @@ public sealed class MessagesHttpApi : MessagingHttpApiBase
         return detailedContact;
     }
 
+    public async Task<Result<EnqueuedMessageToSendList>> ListEnqueuedMessageToSendAsync(MessagesPaginationParameter paginationParameter)
+    {
+        var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"messages?page={paginationParameter.PageNumber}&limit={paginationParameter.PageSize}");
+
+        var response = await ProcessRequestAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var enqueuedMessageToSendList = await response.Content.ReadFromJsonAsync<EnqueuedMessageToSendList>();
+            if (enqueuedMessageToSendList is null)
+            {
+                throw new MessagingException("It seems that the error format got from the API has changed.");
+            }
+            return enqueuedMessageToSendList;
+        }
+        else
+        {
+            var errorWhen500Or401 = await response.Content.ReadFromJsonAsync<DefaultError>();
+            if (errorWhen500Or401 is null)
+            {
+                throw new MessagingException("It seems that the error format got from the API has changed.");
+            }
+
+            return new Error(errorWhen500Or401.Message);
+        }
+    }
+
     public async Task<Result<EnqueuedMessageToSend?>> EnqueueToSendAsync(MessageToSendToARegisteredContact messageToSendToARegisteredContact)
     {
         var request = new HttpRequestMessage(

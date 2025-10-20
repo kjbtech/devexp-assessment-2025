@@ -2,10 +2,7 @@
 
 namespace KjbTech.Messaging.Sdk.Contacts;
 
-/// <summary>
-/// Existing contact.
-/// </summary>
-public sealed class ContactDetails
+public class ContactDetails
 {
     /// <summary>
     /// The name of the contact.
@@ -18,10 +15,4 @@ public sealed class ContactDetails
     /// </summary>
     [JsonPropertyName("phone")]
     public string Phone { get; set; } = null!;
-
-    /// <summary>
-    /// The unique ID of the contact.
-    /// </summary>
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = null!;
 }

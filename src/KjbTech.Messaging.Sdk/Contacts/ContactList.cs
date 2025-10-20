@@ -8,8 +8,8 @@ namespace KjbTech.Messaging.Sdk.Contacts;
 public sealed class ContactList : PagedList
 {
     /// <summary>
-    /// <see cref="ContactDetails"/>
+    /// <see cref="ExistingContact"/>
     /// </summary>
     [JsonPropertyName("contacts")]
-    public List<ContactDetails> Items { get; set; } = [];
+    public List<ExistingContact> Items { get; set; } = [];
 }

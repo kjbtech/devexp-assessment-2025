@@ -37,6 +37,7 @@ public abstract class MessagingHttpApiTestsBase
         Assert.True(contactDeletion.IsSuccess);
     }
 
+    // we need to clean created data
     protected async Task CleanContactsWithAssertAsync()
     {
         var contactsList = await _contactsApi.ListAsync(new PaginationParameter());

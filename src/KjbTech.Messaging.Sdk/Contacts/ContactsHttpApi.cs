@@ -13,7 +13,7 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
         : base(httpClient)
     { }
 
-    public async Task<ContactDetails?> GetAsync(ContactId contactId)
+    public async Task<ExistingContact?> GetAsync(ContactId contactId)
     {
         var request = new HttpRequestMessage(
             HttpMethod.Get,
@@ -21,7 +21,7 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
 
         var response = await ProcessRequestAsync(request);
 
-        var detailedContact = await response.Content.ReadFromJsonAsync<ContactDetails>();
+        var detailedContact = await response.Content.ReadFromJsonAsync<ExistingContact>();
 
         return detailedContact;
     }
@@ -55,7 +55,7 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
         }
     }
 
-    public async Task<Result<ContactDetails?>> CreateAsync(ContactToCreate contactToCreate)
+    public async Task<Result<ExistingContact?>> CreateAsync(ContactToCreate contactToCreate)
     {
         var request = new HttpRequestMessage(
                     HttpMethod.Post,
@@ -68,7 +68,7 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
 
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadFromJsonAsync<ContactDetails>();
+            return await response.Content.ReadFromJsonAsync<ExistingContact>();
         }
         else
         {

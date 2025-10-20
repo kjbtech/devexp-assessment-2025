@@ -16,6 +16,41 @@ public class MessagesHttpApiTests : MessagingHttpApiTestsBase
     }
 
     [Fact]
+    public async Task ListEnqueuedMessageToSendAsync_MustSuccess()
+    {
+        // Arrange
+        var messageSentResult1 = await _messagesApi.EnqueueToSendAsync(
+            new MessageToSendToANumber("Voldemort", "+33601010102")
+            {
+                Content = "Experliarmus!",
+                From = "+33601010101"
+            }
+        );
+
+        var messageSentResult2 = await _messagesApi.EnqueueToSendAsync(
+            new MessageToSendToANumber("Harry Potter", "+33601010101")
+            {
+                Content = "Avada Kedavra!",
+                From = "+33601010102"
+            }
+        );
+
+        // Act
+        var listResult = await _messagesApi.ListEnqueuedMessageToSendAsync(
+            new MessagesPaginationParameter()
+        );
+        await CleanContactsWithAssertAsync();
+
+        // Assert
+        Assert.True(listResult.IsSuccess);
+        Assert.True(listResult.Value.PageSize >= 2);
+        var avadaMessage = listResult.Value.Items.OrderByDescending(m => m.CreatedAt).First();
+        Assert.Equal("Avada Kedavra!", avadaMessage.Content);
+        Assert.Equal("+33601010102", avadaMessage.From);
+        Assert.True(avadaMessage.CreatedAt >= DateTime.MinValue);
+    }
+
+    [Fact]
     public async Task EnqueueToSendAsync_ToAPhone_MustSuccess()
     {
         var messageSentResult = await _messagesApi.EnqueueToSendAsync(
@@ -31,7 +66,7 @@ public class MessagesHttpApiTests : MessagingHttpApiTestsBase
         Assert.True(messageSentResult.IsSuccess);
         Assert.Equal("Experliarmus!", messageSentResult.Value.Content);
         Assert.Equal("+33601010101", messageSentResult.Value.From);
-        Assert.NotNull(messageSentResult.Value.To);
+        Assert.NotNull(messageSentResult.Value.RecipientContactId);
         Assert.True(messageSentResult.Value.CreatedAt >= DateTime.MinValue);
     }
 
@@ -61,7 +96,7 @@ public class MessagesHttpApiTests : MessagingHttpApiTestsBase
         Assert.True(messageSentResult.IsSuccess);
         Assert.Equal("Experliarmus!", messageSentResult.Value.Content);
         Assert.Equal("+33601010101", messageSentResult.Value.From);
-        Assert.NotNull(messageSentResult.Value.To);
+        Assert.NotNull(messageSentResult.Value.RecipientContactId);
         Assert.True(messageSentResult.Value.CreatedAt >= DateTime.MinValue);
     }
 }
