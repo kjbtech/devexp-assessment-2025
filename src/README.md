@@ -27,6 +27,17 @@ using KjbTech.Messaging.Sdk;
 builder.Services.AddMessaging(configuration);
 ```
 
+Previously, you will need to configure your secret and API url.
+You can use either env variables or your local app settings.
+Please, be sure to have a 'MessagingEndpoint' section name or overwrite the default one.
+
+Var envs example:
+```
+MessagingEndpoint__ApiKey=theSecret
+MessagingEndpoint__ApiBaseUrl=youUrlApi
+```
+
+
 ---
 
 ## 🚀 Usage
@@ -70,12 +81,9 @@ Non-fatal business errors (e.g. validation) are returned as `Result.Error`.
 
 ## 🧰 Development
 
-### Build
-```bash
-dotnet build
-```
-
-### Test
+### Integration tests
+It will run both integration and unit tests.
+The first on need you to do a ``docker composer up``, then you can execute the below command.
 ```bash
 dotnet test
 ```

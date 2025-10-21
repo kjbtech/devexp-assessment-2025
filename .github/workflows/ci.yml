@@ -55,7 +55,7 @@ jobs:
       - name: Run unit tests
         working-directory: src
         run: |
-          dotnet test KjbTech.Messaging.Sdk.Tests/KjbTech.Messaging.Sdk.Tests.csproj -c $CONFIGURATION --logger "trx;LogFileName=unit-tests.trx"
+          dotnet test KjbTech.Messaging.Sdk.UnitTests/KjbTech.Messaging.Sdk.UnitTests.csproj -c $CONFIGURATION --logger "trx;LogFileName=unit-tests.trx"
       - name: Upload unit test results
         if: always()
         uses: actions/upload-artifact@v4
