@@ -11,6 +11,8 @@ namespace KjbTech.Messaging.Sdk.Contacts;
 /// </summary>
 public sealed class ContactsHttpApi : MessagingHttpApiBase
 {
+    private const string ApiRoute = "contacts";
+
     public ContactsHttpApi(HttpClient httpClient)
         : base(httpClient)
     { }
@@ -19,7 +21,7 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
     {
         using var request = new HttpRequestMessage(
             HttpMethod.Get,
-            $"contacts/{contactId.Value}");
+            $"{ApiRoute}/{contactId.Value}");
 
         var response = await ProcessRequestAsync<ExistingContact>(request, cancellationToken);
         if (response.IsSuccess)
@@ -40,7 +42,7 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
     {
         using var request = new HttpRequestMessage(
             HttpMethod.Get,
-            $"contacts?pageIndex={paginationParameter.PageNumber}&max={paginationParameter.PageSize}");
+            $"{ApiRoute}?pageIndex={paginationParameter.PageNumber}&max={paginationParameter.PageSize}");
 
         var response = await ProcessRequestAsync<ContactList>(request, cancellationToken);
         if (response.IsSuccess)
@@ -61,7 +63,7 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
     {
         using var request = new HttpRequestMessage(
                     HttpMethod.Post,
-                    $"contacts")
+                    $"{ApiRoute}")
         {
             Content = JsonContent.Create(contactToCreate, MediaTypeHeaderValue.Parse("application/json"))
         };
@@ -98,7 +100,7 @@ public sealed class ContactsHttpApi : MessagingHttpApiBase
     {
         using var request = new HttpRequestMessage(
                     HttpMethod.Delete,
-                    $"contacts/{contactId.Value}");
+                    $"{ApiRoute}/{contactId.Value}");
 
         var response = await ProcessRequestAsync(request, cancellationToken);
 
