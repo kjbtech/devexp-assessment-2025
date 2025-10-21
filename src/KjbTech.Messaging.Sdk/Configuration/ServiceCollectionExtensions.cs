@@ -43,8 +43,7 @@ public static class ServiceCollectionExtensions
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", messagingEndpoint.ApiKey);
             client.BaseAddress = new Uri(messagingEndpoint.ApiBaseUrl);
         })
-            .AddHttpMessageHandler(() => new UpdateUserAgent())
-            .AddHttpMessageHandler(() => new AddObservability());
+            .AddHttpMessageHandler(() => new UpdateUserAgent());
 
         services.AddHttpClient<MessagesHttpApi>((serviceProvider, client) =>
         {
@@ -54,8 +53,7 @@ public static class ServiceCollectionExtensions
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", messagingEndpoint.ApiKey);
             client.BaseAddress = new Uri(messagingEndpoint.ApiBaseUrl);
         })
-            .AddHttpMessageHandler(() => new UpdateUserAgent())
-            .AddHttpMessageHandler(() => new AddObservability());
+            .AddHttpMessageHandler(() => new UpdateUserAgent());
 
         return services;
     }
