@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36603.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KjbTech.Messaging.Sdk", "KjbTech.Messaging.Sdk\KjbTech.Messaging.Sdk.csproj", "{616A6873-BF3B-426B-AE69-5426CA55ADD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KjbTech.Messaging.Sdk.Tests", "KjbTech.Messaging.Sdk.Tests\KjbTech.Messaging.Sdk.Tests.csproj", "{6889F910-8239-DB1D-C5CE-949346941E61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KjbTech.Messaging.Sdk.UnitTests", "KjbTech.Messaging.Sdk.UnitTests\KjbTech.Messaging.Sdk.UnitTests.csproj", "{6889F910-8239-DB1D-C5CE-949346941E61}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KjbTech.Messaging.Sdk.IntegrationTests", "KjbTech.Messaging.Sdk.IntegrationTests\KjbTech.Messaging.Sdk.IntegrationTests.csproj", "{CE6BFB1A-9CBC-475D-AA24-130267CFF9C6}"
 EndProject

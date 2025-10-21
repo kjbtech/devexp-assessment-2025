@@ -1,7 +1,6 @@
 <Project>
 	<PropertyGroup>
 		<Version>0.1.0</Version>
-		<PackageId>KjbTech.Messaging.Sdk</PackageId>
 		<Authors>Kevin Blenner</Authors>
 		<Description>Messaging SDK for the Messaging API.</Description>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>

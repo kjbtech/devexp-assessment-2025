@@ -1,7 +1,8 @@
 ﻿using KjbTech.Messaging.Sdk.Contacts;
 using RichardSzalay.MockHttp;
+using Xunit;
 
-namespace KjbTech.Messaging.Sdk.Tests.Contacts;
+namespace KjbTech.Messaging.Sdk.UnitTests.Contacts;
 
 /// <summary>
 /// We want to check that deserialization is ok.
