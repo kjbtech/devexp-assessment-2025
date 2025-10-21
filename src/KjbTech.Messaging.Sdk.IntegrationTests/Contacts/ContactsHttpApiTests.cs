@@ -4,6 +4,7 @@ namespace KjbTech.Messaging.Sdk.IntegrationTests.Contacts;
 
 [Trait("Category", "Contacts")]
 [Trait("Category", "Integration")]
+[Collection("Sequential Tests")]
 public class ContactsHttpApiTests : MessagingHttpApiTestsBase
 {
     public ContactsHttpApiTests() : base()
@@ -38,6 +39,7 @@ public class ContactsHttpApiTests : MessagingHttpApiTestsBase
                 Phone = "+33601010101"
             }
         );
+        Assert.True(firstContactCreated.IsSuccess);
 
         var secondContactCreated = await _contactsApi.CreateAsync(
             new ContactToCreate()
