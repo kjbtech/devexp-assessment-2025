@@ -1,4 +1,5 @@
-﻿using KjbTech.Messaging.Sdk.Contacts;
+﻿using KjbTech.Messaging.Sdk.Configuration.Http;
+using KjbTech.Messaging.Sdk.Contacts;
 using KjbTech.Messaging.Sdk.Exceptions;
 using KjbTech.Messaging.Sdk.Messages;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Build all usable helper to interact with APIs.
     /// Ensure to configure in you settings/env, a section called 'Messaging'.
+    /// Observability is also defined, adding Trace id and correlation id if missing.
     /// </summary>
     /// <exception cref="MessagingException"></exception>
     public static IServiceCollection AddMessaging(
@@ -41,7 +43,8 @@ public static class ServiceCollectionExtensions
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", messagingEndpoint.ApiKey);
             client.BaseAddress = new Uri(messagingEndpoint.ApiBaseUrl);
         })
-            .AddHttpMessageHandler(() => new UpdateUserAgent());
+            .AddHttpMessageHandler(() => new UpdateUserAgent())
+            .AddHttpMessageHandler(() => new AddObservability());
 
         services.AddHttpClient<MessagesHttpApi>((serviceProvider, client) =>
         {
@@ -51,7 +54,8 @@ public static class ServiceCollectionExtensions
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", messagingEndpoint.ApiKey);
             client.BaseAddress = new Uri(messagingEndpoint.ApiBaseUrl);
         })
-            .AddHttpMessageHandler(() => new UpdateUserAgent());
+            .AddHttpMessageHandler(() => new UpdateUserAgent())
+            .AddHttpMessageHandler(() => new AddObservability());
 
         return services;
     }
