@@ -94,6 +94,8 @@ jobs:
         run: docker compose -f docker-compose.yml build
       - name: Start stack
         run: docker compose -f docker-compose.yml up -d
+      - name: Wait to let the container to start
+        run: sleep 3
       - name: Run integration tests
         working-directory: src
         run: |
